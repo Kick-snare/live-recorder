@@ -1,6 +1,7 @@
 package com.kicksnare.live_recorder
 
 import android.content.pm.PackageManager
+import android.media.MediaRecorder
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import java.util.jar.Manifest
@@ -10,7 +11,14 @@ class MainActivity : AppCompatActivity() {
     private val recordButton: RecordButton by lazy {
         findViewById(R.id.recordButton)
     }
-    private val requiredPermissions = arrayOf(android.Manifest.permission.RECORD_AUDIO)
+    private val requiredPermissions = arrayOf(
+        android.Manifest.permission.RECORD_AUDIO,
+        android.Manifest.permission.READ_EXTERNAL_STORAGE,
+    )
+    private val recordingFilePath: String by lazy {
+        "${externalCacheDir?.absolutePath}/recording.3gp"
+    }
+    private var recorder: MediaRecorder? = null
     private var state = State.BEFORE_RECORDING
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,6 +49,25 @@ class MainActivity : AppCompatActivity() {
 
     private fun initViews() {
         recordButton.updateIconWithState(state)
+    }
+
+    private fun startRecord() {
+        recorder = MediaRecorder().apply {
+            setAudioSource(MediaRecorder.AudioSource.MIC)
+            setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP) // 컨테이너
+            setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB) // 코덱 지정
+            setOutputFile(recordingFilePath)
+            prepare()
+        }
+        recorder?.start()
+    }
+
+    private fun stopRecording() {
+        recorder?.run {
+            stop()
+            release()
+        }
+        recorder = null
     }
 
     companion object {
