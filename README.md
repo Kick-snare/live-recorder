@@ -1,3 +1,3 @@
 # live-recorder
-mobile recorder aplication for android
+mobile recorder application for android
 ---
