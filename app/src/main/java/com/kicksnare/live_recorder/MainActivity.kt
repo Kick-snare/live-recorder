@@ -13,6 +13,9 @@ class MainActivity : AppCompatActivity() {
     private val soundVisualizerView: SoundVisualizerView by lazy {
         findViewById(R.id.soundVisualizerView)
     }
+    private val recordTimeTextView: CountUpTextView by lazy {
+        findViewById(R.id.recordTimeTextView)
+    }
     private val resetButton: Button by lazy {
         findViewById(R.id.resetButton)
     }
@@ -100,6 +103,7 @@ class MainActivity : AppCompatActivity() {
         }
         recorder?.start()
         soundVisualizerView.startVisualizing(false)
+        recordTimeTextView.startCountUp()
         state = State.ON_RECORDING
     }
 
@@ -110,6 +114,7 @@ class MainActivity : AppCompatActivity() {
         }
         recorder = null
         soundVisualizerView.stopVisualizing()
+        recordTimeTextView.stopCountUp()
         state = State.AFTER_RECORDING
     }
 
@@ -121,6 +126,7 @@ class MainActivity : AppCompatActivity() {
         }
         player?.start()
         soundVisualizerView.startVisualizing(true)
+        recordTimeTextView.startCountUp()
         state = State.ON_PLAYING
     }
 
@@ -128,6 +134,7 @@ class MainActivity : AppCompatActivity() {
         player?.release()
         player = null
         soundVisualizerView.stopVisualizing()
+        recordTimeTextView.stopCountUp()
         state = State.BEFORE_RECORDING
     }
 
