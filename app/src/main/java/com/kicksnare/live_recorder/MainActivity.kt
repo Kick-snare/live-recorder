@@ -10,6 +10,9 @@ import java.util.jar.Manifest
 
 class MainActivity : AppCompatActivity() {
 
+    private val soundVisualizerView: SoundVisualizerView by lazy {
+        findViewById(R.id.soundVisualizerView)
+    }
     private val resetButton: Button by lazy {
         findViewById(R.id.resetButton)
     }
@@ -65,6 +68,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun bindViews() {
+        soundVisualizerView.onRequestCurrentAmplitude = {
+            recorder?.maxAmplitude ?: 0
+        }
         recordButton.setOnClickListener {
             when(state) {
                 State.BEFORE_RECORDING -> startRecord()
@@ -92,6 +98,7 @@ class MainActivity : AppCompatActivity() {
             prepare()
         }
         recorder?.start()
+        soundVisualizerView.startVisualizing()
         state = State.ON_RECORDING
     }
 
@@ -101,6 +108,7 @@ class MainActivity : AppCompatActivity() {
             release()
         }
         recorder = null
+        soundVisualizerView.stopVisualizing()
         state = State.AFTER_RECORDING
     }
 
