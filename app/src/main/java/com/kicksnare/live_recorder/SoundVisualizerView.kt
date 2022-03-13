@@ -23,13 +23,17 @@ class SoundVisualizerView(
     private var drawingWidth: Int = 0
     private var drawingHeight: Int = 0
     private var drawingAmplitudes: List<Int> = emptyList()
+    private var isReplaying: Boolean = false
+    private var replayingPosition: Int = 0
 
     private val visualizerRepeatAction : Runnable = object : Runnable {
         override fun run() {
-            val currentAmplitude = onRequestCurrentAmplitude?.invoke() ?: 0
-            // MainActivity에서 정의한 함수로 현재 오디오가 가진 maxAmplitude 값을 가져옴
+            if(!isReplaying) {
+                val currentAmplitude = onRequestCurrentAmplitude?.invoke() ?: 0
+                // MainActivity 에서 정의한 함수로 현재 오디오가 가진 maxAmplitude 값을 가져옴
+                drawingAmplitudes = listOf(currentAmplitude) + drawingAmplitudes
+            } else replayingPosition++
 
-            drawingAmplitudes = listOf(currentAmplitude) + drawingAmplitudes
             invalidate()
 
             handler?.postDelayed(this, ACTION_INTERVAL)
@@ -51,26 +55,38 @@ class SoundVisualizerView(
         val centerY = drawingHeight / 2f
         var offsetX = drawingWidth.toFloat()
 
-        drawingAmplitudes.forEach { amplitude ->
-            val lineLength = amplitude / MAX_AMPLITUDE * drawingHeight * 0.8F
+        drawingAmplitudes
+            .let { amplitude ->
+                if(isReplaying) amplitude.takeLast(replayingPosition)
+                else amplitude
+            }
+            .forEach { amplitude ->
+                val lineLength = amplitude / MAX_AMPLITUDE * drawingHeight * 0.8F
 
-            offsetX -= LINE_SPACE
-            if(offsetX < 0) return@forEach
+                offsetX -= LINE_SPACE
+                if(offsetX < 0) return@forEach
 
-            canvas.drawLine(
-                offsetX, centerY - lineLength / 2F,
-                offsetX, centerY + lineLength / 2F,
-                amplitudePaint
-            )
-        }
+                canvas.drawLine(
+                    offsetX, centerY - lineLength / 2F,
+                    offsetX, centerY + lineLength / 2F,
+                    amplitudePaint
+                )
+            }
     }
 
-    fun startVisualizing() {
+    fun startVisualizing(isReplaying: Boolean) {
+        this.isReplaying = isReplaying
         handler?.post(visualizerRepeatAction)
     }
 
     fun stopVisualizing() {
         handler?.removeCallbacks(visualizerRepeatAction)
+    }
+
+    fun reset() {
+        handler?.removeCallbacks(visualizerRepeatAction)
+        replayingPosition = 0;
+        drawingAmplitudes = emptyList()
     }
 
     companion object {
