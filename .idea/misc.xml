@@ -4,7 +4,9 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.3425641025641026" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.3072916666666667" />
+        <entry key="app/src/main/res/drawable/shape_oval_button.xml" value="0.335" />
+        <entry key="app/src/main/res/drawable/shpae_oval_button.xml" value="0.3351851851851852" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.34067273753387256" />
       </map>
     </option>
   </component>

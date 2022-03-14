@@ -122,7 +122,7 @@ class MainActivity : AppCompatActivity() {
         player = MediaPlayer().apply {
             setDataSource(recordingFilePath)
             prepare()
-            // prepare Async 는 비동기적으로.. 지금은 금방 되니까 걍
+            // prepare Async 는 비동기적으로
         }
         player?.start()
         soundVisualizerView.startVisualizing(true)

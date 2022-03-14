@@ -11,6 +11,10 @@ class RecordButton(
     attrs: AttributeSet
 ): AppCompatImageButton(context, attrs) {
 
+    init {
+        setBackgroundResource(R.drawable.shape_oval_button)
+    }
+
     fun updateIconWithState(state: State) {
         when(state) {
             State.BEFORE_RECORDING -> { setImageResource(R.drawable.ic_record) }
