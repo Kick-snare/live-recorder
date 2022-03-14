@@ -37,7 +37,6 @@ class SoundVisualizerView(
             invalidate()
 
             handler?.postDelayed(this, ACTION_INTERVAL)
-            // 자기 자신을 20ms 마다 호출함
         }
     }
 
@@ -81,12 +80,13 @@ class SoundVisualizerView(
 
     fun stopVisualizing() {
         handler?.removeCallbacks(visualizerRepeatAction)
+        replayingPosition = 0;
     }
 
-    fun reset() {
+    fun clearVisualization() {
         handler?.removeCallbacks(visualizerRepeatAction)
-        replayingPosition = 0;
         drawingAmplitudes = emptyList()
+        invalidate()
     }
 
     companion object {

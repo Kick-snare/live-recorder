@@ -85,7 +85,8 @@ class MainActivity : AppCompatActivity() {
         resetButton.setOnClickListener {
             stopPlaying()
             state = State.BEFORE_RECORDING
-            soundVisualizerView.reset()
+            soundVisualizerView.clearVisualization()
+            recordTimeTextView.clearCountUp()
         }
     }
 
@@ -123,6 +124,10 @@ class MainActivity : AppCompatActivity() {
             setDataSource(recordingFilePath)
             prepare()
             // prepare Async 는 비동기적으로
+        }
+        player?.setOnCompletionListener {
+            stopPlaying()
+            state = State.AFTER_RECORDING
         }
         player?.start()
         soundVisualizerView.startVisualizing(true)
